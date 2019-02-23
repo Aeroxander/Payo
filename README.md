@@ -1,2 +1,3 @@
-# Denmo
-A decentralized Venmo
+# Quasar App
+
+> WIP
