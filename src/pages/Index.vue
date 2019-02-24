@@ -27,7 +27,11 @@
 
 import Portis from '@portis/web3'
 import Web3 from 'web3'
-import * as RequestNetwork from '@requestnetwork/request-client.js'
+import {
+  // Request,
+  RequestNetwork,
+  Types
+} from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
 import PayDialog from '../components/PayDialog'
 import NotifDialog from '../components/NotifDialog'
@@ -54,16 +58,9 @@ export default {
     NotifDialog
   },
   mounted: function () {
-    /*
-      const localNode = {
-        nodeUrl: 'https://localhost:8545',
-        chainId: 50,
-        nodeProtocol: 'rpc'
-      }
-      */
     const portis = new Portis(
       DAPP_ID,
-      'mainnet' // localNode
+      'rinkeby' // 'mainnet'
     )
     const web3 = new Web3(portis.provider)
 
@@ -72,6 +69,7 @@ export default {
         console.log('Error: Cant get account')
       } else {
         this.walletAddress = accounts[0]
+        this.createRequest()
       }
     })
 
@@ -86,56 +84,179 @@ export default {
 
     // web3.currentProvider.isPortis //returns boolean if user is logged into Portis
   },
-  createRequest () {
-    // payee information
-    const payeeSignatureInfo = {
-      method: RequestNetwork.Types.Signature.METHOD.ECDSA,
-      privateKey: '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'
-    }
-    const payeeIdentity = {
-      type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
-      value: this.walletAddress
-    }
+  methods: {
+    createRequest () {
+      // Payee Identity and Signature parameters
 
-    // Signature providers
-    const signatureProvider = new EthereumPrivateKeySignatureProvider(payeeSignatureInfo)
-
-    const requestInfo = {
-      currency: RequestNetwork.Types.RequestLogic.REQUEST_LOGIC_CURRENCY.BTC,
-      expectedAmount: '100000000000',
-      payee: payeeIdentity,
-      payer: {
-        type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
-        value: '0x740fc87Bd3f41d07d23A01DEc90623eBC5fed9D6'
+      const payeeIdentity = {
+        type: Types.Identity.TYPE.ETHEREUM_ADDRESS,
+        value: '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65'
       }
-    }
 
-    const topics = [
-      this.walletAddress,
-      '0x740fc87Bd3f41d07d23A01DEc90623eBC5fed9D6'
-    ]
-
-    const paymentNetwork = {
-      id: RequestNetwork.Types.PAYMENT_NETWORK_ID.BITCOIN_ADDRESS_BASED,
-      parameters: {
-        paymentAddress: 'mgPKDuVmuS9oeE2D9VPiCQriyU14wxWS1v'
+      const payeeSignatureParameters = {
+        method: Types.Signature.METHOD.ECDSA,
+        privateKey:
+          '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
       }
-    };
 
-    (async () => {
-      const requestNetwork = new RequestNetwork.RequestNetwork({
+      // Payer Identity
+
+      const payerIdentity = {
+        type: Types.Identity.TYPE.ETHEREUM_ADDRESS,
+        value: '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467'
+      }
+
+      // Request basic information
+
+      const requestCreationHash = {
+        currency: Types.RequestLogic.CURRENCY.BTC,
+        expectedAmount: '1',
+
+        // payee is not mandatory if payer given
+        payee: payeeIdentity,
+        // payer is not mandatory if payee given
+        payer: payerIdentity
+      }
+
+      // Payment network to reconciliate the payment
+
+      const paymentNetwork = {
+        // Here testnet bitcoin is used
+        id: Types.PAYMENT_NETWORK_ID.TESTNET_BITCOIN_ADDRESS_BASED,
+        parameters: {
+          paymentAddress: '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
+        }
+      }
+
+      // Some arbitrary content to link to the request (you can use request-data-format here)
+
+      const contentData = {
+        it: 'is',
+        some: 'content',
+        true: true
+      }
+
+      // Automatically the requestId, the payee identity value and the payer identity value are added to the topics
+
+      // But you can index your request with your extra topics
+
+      const topics = [
+        '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65',
+        '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467',
+        '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
+      ]
+
+      // Signature provider will take care of signing everything
+
+      const signatureProvider = new EthereumPrivateKeySignatureProvider(
+        payeeSignatureParameters
+      )
+
+      // Create the requestNetwork object
+
+      // const requestNetwork = new RequestNetwork({
+      //   useMockStorage: true,
+      //   signatureProvider
+      // })
+
+      const requestNetwork = new RequestNetwork({
+        useMockStorage: true,
         signatureProvider
       })
 
-      const request = await requestNetwork.createRequest({
-        paymentNetwork,
-        requestInfo,
-        signer: payeeIdentity,
-        topics
-      })
+      const foo = async () => {
+        // Create a request
+        const request = await requestNetwork.createRequest({
+          contentData,
+          paymentNetwork,
+          requestInfo: requestCreationHash,
+          signer: payeeIdentity,
+          topics
+        })
 
-      console.log(request)
-    })()
+        const requestData = await request.getData()
+        console.log('requestId', requestData.requestId)
+        console.log('creator of the request identity:', requestData.creator)
+        console.log('payee identity:', requestData.payee)
+        console.log('payer identity:', requestData.payer)
+        console.log('expected amount:', requestData.expectedAmount)
+        console.log('state (created, accepted, canceled):', requestData.state)
+        console.log('historical events:', requestData.events)
+
+        // not necessary given, only indication given by the request payer
+        console.log('arbitrary timestamp:', requestData.timestamp)
+
+        // Balance information - null if no payment network used
+        if (requestData.balance) {
+          console.log(
+            'Current balance on the request:',
+            requestData.balance.balance
+          )
+
+          console.log(
+            'History of payments and refunds:',
+            requestData.balance.events
+          )
+        }
+
+        console.log('Content data:', requestData.contentData)
+        // Some meta data about the request (where the data are stored for example)
+        console.log('meta:', requestData.meta)
+        /*
+      // payee information
+      const payeeSignatureInfo = {
+        method: RequestNetwork.Types.Signature.METHOD.ECDSA,
+        privateKey: '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
+      }
+      const payeeIdentity = {
+        type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
+        value: '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65'
+      }
+
+      // Signature providers
+      const signatureProvider = new EthereumPrivateKeySignatureProvider(payeeSignatureInfo)
+
+      const requestInfo = {
+        currency: RequestNetwork.Types.RequestLogic.REQUEST_LOGIC_CURRENCY.ETH,
+        expectedAmount: '0.01',
+        payee: payeeIdentity,
+        payer: {
+          type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
+          value: '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467'
+        }
+      }
+
+      const topics = [
+        '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65',
+        '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467',
+        'all'
+      ]
+
+      const paymentNetwork = {
+        id: RequestNetwork.Types.PAYMENT_NETWORK_ID.ETHEREUM_ADDRESS_BASED,
+        parameters: {
+          paymentAddress: '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65'
+        }
+      }
+
+      (async () => {
+        const requestNetwork = new RequestNetwork.RequestNetwork({
+          signatureProvider, nodeConnectionConfig: { baseURL: 'http://localhost:3000' }
+        })
+
+        const request = await requestNetwork.createRequest({
+          paymentNetwork,
+          requestInfo,
+          signer: payeeIdentity,
+          topics
+        })
+
+        console.log(request)
+      })()
+      */
+      }
+      foo()
+    }
   }
 }
 </script>
