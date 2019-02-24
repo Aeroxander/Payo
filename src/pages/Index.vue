@@ -9,7 +9,9 @@
     </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <div class="q-pa-md q-gutter-sm">
-        <q-btn fab icon="attach_money" color="accent" @click="transaction = true" />
+        <q-btn fab color="positive" @click="transaction = true" >
+          <q-icon name="attach_money" />
+        </q-btn>
         <PayDialog :transaction="transaction" :walletAddress="walletAddress"/>
       </div>
     </q-page-sticky>
