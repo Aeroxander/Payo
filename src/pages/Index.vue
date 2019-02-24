@@ -1,12 +1,7 @@
 <template>
   <q-page class='flex flex-center'>
     <q-page-sticky position="top-right" :offset="[18, 18]">
-      <div class="q-pa-md q-gutter-sm">
-        <q-btn fab color="warning" @click="showNotifications = true" :disabled="!notifications.length" >
-          <q-icon name="far fa-bell"/>
-        </q-btn>
-        <NotifDialog :showNotifications="showNotifications" :notifications="notifications"/>
-      </div>
+      <Notifications />
     </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <div class="q-pa-md q-gutter-sm">
@@ -34,11 +29,7 @@ import {
 } from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
 import PayDialog from '../components/PayDialog'
-import NotifDialog from '../components/NotifDialog'
-const MOCK_NOTIFS = [
-  { message: 'this is a notification', id: 1 },
-  { message: 'this is also notification', id: 2 }
-]
+import Notifications from '../components/Notifications'
 
 const DAPP_ID = '426fc4a3-d87e-4381-a6eb-8134b254b3ed'
 
@@ -48,14 +39,12 @@ export default {
     return {
       user: null,
       walletAddress: null,
-      transaction: false,
-      showNotifications: false,
-      notifications: MOCK_NOTIFS
+      transaction: false
     }
   },
   components: {
     PayDialog,
-    NotifDialog
+    Notifications
   },
   mounted: function () {
     const portis = new Portis(

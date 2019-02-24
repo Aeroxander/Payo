@@ -1,5 +1,8 @@
 <template>
     <div>
+    <q-btn fab color="warning" @click="showNotifications = true" :disabled="!notifications.length" >
+      <q-icon name="far fa-bell"/>
+    </q-btn>
     <q-dialog v-model="showNotifications">
       <q-card>
         <q-card-section>
@@ -22,11 +25,17 @@
 </template>
 
 <script>
+const MOCK_NOTIFS = [
+  { message: 'this is a notification', id: 1 },
+  { message: 'this is also notification', id: 2 }
+]
+
 export default {
-  name: 'NotifDialog',
-  props: ['showNotifications', 'notifications'],
+  name: 'Notifications',
   data: function () {
     return {
+      showNotifications: false,
+      notifications: MOCK_NOTIFS
     }
   }
 }
