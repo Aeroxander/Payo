@@ -7,9 +7,11 @@
         </q-card-section>
         <q-card-section>
           <q-list bordered separator>
-            <q-item clickable v-ripple>
-              <q-item-section v-for="notif in notifications" :key="notif.id">
-                {{ notif.message }}
+            <q-item v-for="notif in notifications" :key="notif.id" clickable v-ripple>
+              <q-item-section>
+                <q-item-label>
+                  {{ notif.message }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
