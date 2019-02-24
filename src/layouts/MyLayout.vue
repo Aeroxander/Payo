@@ -16,7 +16,7 @@
           Denmo
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>Made at DevWeek Hackathon</div>
       </q-toolbar>
     </q-header>
 
