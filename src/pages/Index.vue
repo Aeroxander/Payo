@@ -65,7 +65,7 @@ export default {
     }
     const payeeIdentity = {
       type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
-      value: '0x627306090abab3a6e1400e9345bc60c78a8bef57'
+      value: this.walletAddress
     }
 
     // Signature providers
