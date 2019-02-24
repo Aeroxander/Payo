@@ -44,7 +44,6 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          payeeKey, payeePrivateKey, payerKey, currency, amount
           <q-btn flat label="YES" @click="createTransaction(
             recipient, walletAddress, selectedCurrency, amount
           )"/>
@@ -58,7 +57,7 @@
 <script>
 export default {
   name: 'Transaction',
-  props: ['walletAddress'],
+  props: ['walletAddress', 'createTransaction'],
   data: function () {
     return {
       sendConfirm: false,
