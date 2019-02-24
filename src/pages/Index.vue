@@ -8,6 +8,8 @@
 </style>
 
 <script>
+/* eslint-disable no-console */
+
 import Portis from '@portis/web3'
 import Web3 from 'web3'
 import * as RequestNetwork from '@requestnetwork/request-client.js'
