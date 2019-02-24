@@ -82,7 +82,7 @@ export default {
     }
 
     const topics = [
-      '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+      this.walletAddress,
       '0x740fc87Bd3f41d07d23A01DEc90623eBC5fed9D6'
     ]
 
