@@ -1,6 +1,8 @@
 <template>
   <q-page class='flex flex-center'>
-    <img v-if='user' alt='Quasar logo' src='~assets/quasar-logo-full.svg'>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab icon="attach_money" color="accent" />
+    </q-page-sticky>
   </q-page>
 </template>
 
