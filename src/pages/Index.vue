@@ -42,8 +42,9 @@ export default {
     web3.eth.getAccounts((error, accounts) => {
       if (error) {
         console.log('Error: Cant get account')
+      } else {
+        this.walletAddress = accounts[0]
       }
-      this.walletAddress = accounts[0]
     })
 
     // this.user = ''
