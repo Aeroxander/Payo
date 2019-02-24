@@ -44,7 +44,10 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="YES" v-close-dialog />
+          payeeKey, payeePrivateKey, payerKey, currency, amount
+          <q-btn flat label="YES" @click="createTransaction(
+            recipient, walletAddress, selectedCurrency, amount
+          )"/>
           <q-btn flat label="NO" v-close-dialog />
         </q-card-actions>
       </q-card>

@@ -4,7 +4,7 @@
       <Notifications />
     </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <Transaction :walletAddress="walletAddress" />
+      <Transaction :walletAddress="walletAddress" :createRequest="createRequest" />
     </q-page-sticky>
   </q-page>
 </template>
@@ -47,12 +47,13 @@ export default {
     )
     const web3 = new Web3(portis.provider)
 
+    fetch('http://localhost:3000/getTransactionsByTopic?topic=all').then(console.log)
+
     web3.eth.getAccounts((error, accounts) => {
       if (error) {
         console.log('Error: Cant get account')
       } else {
         this.walletAddress = accounts[0]
-        this.createRequest()
       }
     })
 
@@ -68,32 +69,33 @@ export default {
     // web3.currentProvider.isPortis //returns boolean if user is logged into Portis
   },
   methods: {
-    createRequest () {
+    createRequest (payeeKey, payerKey, currency, amount) {
+      const paymentAddress = '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
+      const payeePrivateKey = '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
       // Payee Identity and Signature parameters
 
       const payeeIdentity = {
         type: Types.Identity.TYPE.ETHEREUM_ADDRESS,
-        value: '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65'
+        value: payeeKey
       }
 
       const payeeSignatureParameters = {
         method: Types.Signature.METHOD.ECDSA,
-        privateKey:
-          '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
+        privateKey: payeePrivateKey
       }
 
       // Payer Identity
 
       const payerIdentity = {
         type: Types.Identity.TYPE.ETHEREUM_ADDRESS,
-        value: '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467'
+        value: payerKey
       }
 
       // Request basic information
 
       const requestCreationHash = {
-        currency: Types.RequestLogic.CURRENCY.BTC,
-        expectedAmount: '1',
+        currency: Types.RequestLogic.CURRENCY[currency],
+        expectedAmount: amount,
 
         // payee is not mandatory if payer given
         payee: payeeIdentity,
@@ -107,7 +109,7 @@ export default {
         // Here testnet bitcoin is used
         id: Types.PAYMENT_NETWORK_ID.TESTNET_BITCOIN_ADDRESS_BASED,
         parameters: {
-          paymentAddress: '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
+          paymentAddress
         }
       }
 
@@ -124,9 +126,9 @@ export default {
       // But you can index your request with your extra topics
 
       const topics = [
-        '0xbab6575ce34db3432dc501c142eb4a3f7ffd4a65',
-        '0xf64Fc7Db7FeD935ad167c268686F4DB7FB966467',
-        '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
+        payeeKey,
+        payerKey,
+        paymentAddress
       ]
 
       // Signature provider will take care of signing everything
