@@ -1,0 +1,66 @@
+<template>
+    <div>
+    <q-dialog v-model="transaction">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Send or Request</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-input v-model="recipient" label="Recipient Address"></q-input>
+          <q-input v-model="amount" label="Amount"></q-input>
+          <q-select v-model="selectedCurrency" :options="currencies" label="Currency"></q-select>
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Send" @click="sendConfirm = true" />
+          <q-btn flat label="Request" @click="requestConfirm = true" />
+          <q-btn flat label="Close" v-close-dialog />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="sendConfirm" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-teal text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Are you sure you want to Send?</div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="YES" v-close-dialog />
+          <q-btn flat label="NO" v-close-dialog />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="requestConfirm" persistent transition-show="scale" transition-hide="scale">
+      <q-card class="bg-teal text-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Are you sure you want to Request?</div>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="YES" v-close-dialog />
+          <q-btn flat label="NO" v-close-dialog />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'PayDialog',
+  props: ['transaction', 'walletAddress'],
+  data: function () {
+    return {
+      sendConfirm: false,
+      requestConfirm: false,
+      currencies: ['BTC', 'ETH'],
+      selectedCurrency: '',
+      recipient: '',
+      amount: ''
+    }
+  }
+}
+</script>

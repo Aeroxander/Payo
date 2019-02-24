@@ -3,50 +3,7 @@
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <div class="q-pa-md q-gutter-sm">
         <q-btn fab icon="attach_money" color="accent" @click="transaction = true" />
-        <q-dialog v-model="transaction">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Send or Request</div>
-            </q-card-section>
-
-            <q-card-section>
-              FORM HERE!
-            </q-card-section>
-
-            <q-card-actions align="right" class="text-primary">
-              <q-btn flat label="Send" @click="sendConfirm = true" />
-              <q-btn flat label="Request" @click="requestConfirm = true" />
-              <q-btn flat label="Close" v-close-dialog />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
-
-        <q-dialog v-model="sendConfirm" persistent transition-show="scale" transition-hide="scale">
-          <q-card class="bg-teal text-white" style="width: 300px">
-            <q-card-section>
-              <div class="text-h6">Are you sure you want to Send?</div>
-            </q-card-section>
-
-            <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="YES" v-close-dialog />
-              <q-btn flat label="NO" v-close-dialog />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
-
-        <q-dialog v-model="requestConfirm" persistent transition-show="scale" transition-hide="scale">
-          <q-card class="bg-teal text-white" style="width: 300px">
-            <q-card-section>
-              <div class="text-h6">Are you sure you want to Request?</div>
-            </q-card-section>
-
-            <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="YES" v-close-dialog />
-              <q-btn flat label="NO" v-close-dialog />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
-
+        <PayDialog :transaction="transaction" :walletAddress="walletAddress"/>
       </div>
     </q-page-sticky>
   </q-page>
@@ -62,6 +19,7 @@ import Portis from '@portis/web3'
 import Web3 from 'web3'
 import * as RequestNetwork from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
+import PayDialog from '../components/PayDialog'
 
 const DAPP_ID = '426fc4a3-d87e-4381-a6eb-8134b254b3ed'
 
@@ -71,10 +29,11 @@ export default {
     return {
       user: null,
       walletAddress: null,
-      transaction: false,
-      sendConfirm: false,
-      requestConfirm: false
+      transaction: false
     }
+  },
+  components: {
+    PayDialog
   },
   mounted: function () {
     /*

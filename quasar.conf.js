@@ -45,7 +45,9 @@ module.exports = function (ctx) {
         'SessionStorage',
         'QCardSection',
         'QCard',
-        'QCardActions'
+        'QCardActions',
+        'QInput',
+        'QSelect'
       ],
 
       directives: [
