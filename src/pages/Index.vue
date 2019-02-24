@@ -31,6 +31,10 @@ import * as RequestNetwork from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
 import PayDialog from '../components/PayDialog'
 import NotifDialog from '../components/NotifDialog'
+const MOCK_NOTIFS = [
+  { message: 'this is a notification', id: 1 },
+  { message: 'this is also notification', id: 2 }
+]
 
 const DAPP_ID = '426fc4a3-d87e-4381-a6eb-8134b254b3ed'
 
@@ -42,7 +46,7 @@ export default {
       walletAddress: null,
       transaction: false,
       showNotifications: false,
-      notifications: [{ message: 'this is a notification', id: 1 }]
+      notifications: MOCK_NOTIFS
     }
   },
   components: {
