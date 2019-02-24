@@ -1,5 +1,12 @@
 <template>
   <q-page class='flex flex-center'>
+    <q-page-sticky position="top-right" :offset="[18, 18]">
+      <div class="q-pa-md q-gutter-sm">
+        <q-btn fab color="warning" @click="showNotifications = true" :disabled="!notifications.length" >
+          <q-icon name="far fa-bell"/>
+        </q-btn>
+      </div>
+    </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <div class="q-pa-md q-gutter-sm">
         <q-btn fab icon="attach_money" color="accent" @click="transaction = true" />
@@ -29,7 +36,9 @@ export default {
     return {
       user: null,
       walletAddress: null,
-      transaction: false
+      transaction: false,
+      showNotifications: false,
+      notifications: []
     }
   },
   components: {
