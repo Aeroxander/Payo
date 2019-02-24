@@ -10,6 +10,7 @@
           <q-input v-model="recipient" label="Recipient Address"></q-input>
           <q-input v-model="amount" label="Amount"></q-input>
           <q-select v-model="selectedCurrency" :options="currencies" label="Currency"></q-select>
+          <q-input v-model="description" label="Description"></q-input>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -59,7 +60,8 @@ export default {
       currencies: ['BTC', 'ETH'],
       selectedCurrency: '',
       recipient: '',
-      amount: ''
+      amount: '',
+      description: ''
     }
   }
 }
