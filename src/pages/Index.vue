@@ -15,6 +15,8 @@ import Web3 from 'web3'
 import * as RequestNetwork from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
 
+const DAPP_ID = '426fc4a3-d87e-4381-a6eb-8134b254b3ed'
+
 export default {
   name: 'PageIndex',
   data: function () {
@@ -32,7 +34,7 @@ export default {
       }
       */
     const portis = new Portis(
-      '426fc4a3-d87e-4381-a6eb-8134b254b3ed',
+      DAPP_ID,
       'mainnet' // localNode
     )
     const web3 = new Web3(portis.provider)
