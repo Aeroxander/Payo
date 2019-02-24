@@ -13,7 +13,7 @@
         </q-btn>
 
         <q-toolbar-title>
-          Quasar App
+          Denmo
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
