@@ -1,6 +1,9 @@
 <template>
-    <div>
-    <q-dialog v-model="transaction">
+  <div class="q-pa-md q-gutter-sm">
+    <q-btn fab color="positive" @click="isTransacting = true" >
+      <q-icon name="attach_money" />
+    </q-btn>
+    <q-dialog v-model="isTransacting">
       <q-card>
         <q-card-section>
           <div class="text-h6">Send or Request</div>
@@ -51,8 +54,8 @@
 
 <script>
 export default {
-  name: 'PayDialog',
-  props: ['transaction', 'walletAddress'],
+  name: 'Transaction',
+  props: ['walletAddress'],
   data: function () {
     return {
       sendConfirm: false,
@@ -61,7 +64,8 @@ export default {
       selectedCurrency: '',
       recipient: '',
       amount: '',
-      description: ''
+      description: '',
+      isTransacting: false
     }
   }
 }

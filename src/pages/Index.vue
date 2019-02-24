@@ -4,12 +4,7 @@
       <Notifications />
     </q-page-sticky>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <div class="q-pa-md q-gutter-sm">
-        <q-btn fab color="positive" @click="transaction = true" >
-          <q-icon name="attach_money" />
-        </q-btn>
-        <PayDialog :transaction="transaction" :walletAddress="walletAddress"/>
-      </div>
+      <Transaction :walletAddress="walletAddress" />
     </q-page-sticky>
   </q-page>
 </template>
@@ -28,7 +23,7 @@ import {
   Types
 } from '@requestnetwork/request-client.js'
 import { EthereumPrivateKeySignatureProvider } from '@requestnetwork/epk-signature'
-import PayDialog from '../components/PayDialog'
+import Transaction from '../components/Transaction'
 import Notifications from '../components/Notifications'
 
 const DAPP_ID = '426fc4a3-d87e-4381-a6eb-8134b254b3ed'
@@ -38,12 +33,11 @@ export default {
   data: function () {
     return {
       user: null,
-      walletAddress: null,
-      transaction: false
+      walletAddress: null
     }
   },
   components: {
-    PayDialog,
+    Transaction,
     Notifications
   },
   mounted: function () {
