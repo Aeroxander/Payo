@@ -1,7 +1,53 @@
 <template>
   <q-page class='flex flex-center'>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="attach_money" color="accent" />
+      <div class="q-pa-md q-gutter-sm">
+        <q-btn fab icon="attach_money" color="accent" @click="transaction = true" />
+        <q-dialog v-model="transaction">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Send or Request</div>
+            </q-card-section>
+
+            <q-card-section>
+              FORM HERE!
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Send" @click="sendConfirm = true" />
+              <q-btn flat label="Request" @click="requestConfirm = true" />
+              <q-btn flat label="Close" v-close-dialog />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="sendConfirm" persistent transition-show="scale" transition-hide="scale">
+          <q-card class="bg-teal text-white" style="width: 300px">
+            <q-card-section>
+              <div class="text-h6">Are you sure you want to Send?</div>
+            </q-card-section>
+
+            <q-card-actions align="right" class="bg-white text-teal">
+              <q-btn flat label="YES" v-close-dialog />
+              <q-btn flat label="NO" v-close-dialog />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <q-dialog v-model="requestConfirm" persistent transition-show="scale" transition-hide="scale">
+          <q-card class="bg-teal text-white" style="width: 300px">
+            <q-card-section>
+              <div class="text-h6">Are you sure you want to Request?</div>
+            </q-card-section>
+
+            <q-card-actions align="right" class="bg-white text-teal">
+              <q-btn flat label="YES" v-close-dialog />
+              <q-btn flat label="NO" v-close-dialog />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+      </div>
     </q-page-sticky>
   </q-page>
 </template>
@@ -24,7 +70,10 @@ export default {
   data: function () {
     return {
       user: null,
-      walletAddress: null
+      walletAddress: null,
+      transaction: false,
+      sendConfirm: false,
+      requestConfirm: false
     }
   },
   mounted: function () {

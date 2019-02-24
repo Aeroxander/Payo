@@ -31,6 +31,7 @@ module.exports = function (ctx) {
         'QPage',
         'QPageSticky',
         'QFab',
+        'QDialog',
         'QFabAction',
         'QToolbar',
         'QToolbarTitle',
@@ -41,11 +42,15 @@ module.exports = function (ctx) {
         'QItemSection',
         'QItemLabel',
         'LocalStorage',
-        'SessionStorage'
+        'SessionStorage',
+        'QCardSection',
+        'QCard',
+        'QCardActions'
       ],
 
       directives: [
-        'Ripple'
+        'Ripple',
+        'CloseDialog'
       ],
 
       // Quasar plugins
