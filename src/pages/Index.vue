@@ -145,7 +145,10 @@ export default {
       // })
 
       const requestNetwork = new RequestNetwork({
-        useMockStorage: true,
+        nodeConnectionConfig: {
+          baseURL: 'http://localhost:3000',
+          headers: { 'Access-Control-Allow-Origin': '*' }
+        },
         signatureProvider
       })
 
