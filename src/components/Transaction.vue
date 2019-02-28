@@ -11,8 +11,14 @@
 
         <q-card-section>
           <q-input v-model="recipient" label="Recipient Address"></q-input>
-          <q-input v-model="amount" label="Amount"></q-input>
-          <q-select v-model="selectedCurrency" :options="currencies" label="Currency"></q-select>
+          <div class="row">
+            <div class="col">
+              <q-input v-model="amount" type="number" label="Amount"></q-input>
+            </div>
+            <div class="col">
+              <q-select v-model="selectedCurrency" :options="currencies" label="Currency"></q-select>
+            </div>
+          </div>
           <q-input v-model="description" label="Description"></q-input>
         </q-card-section>
 
@@ -44,8 +50,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="YES" @click="createTransaction(
-            recipient, walletAddress, selectedCurrency, amount
+          <q-btn flat label="YES" @click="createRequest(
+            recipient, walletAddress, selectedCurrency, amount, description
           )"/>
           <q-btn flat label="NO" v-close-dialog />
         </q-card-actions>
@@ -57,13 +63,13 @@
 <script>
 export default {
   name: 'Transaction',
-  props: ['walletAddress', 'createTransaction'],
+  props: ['walletAddress', 'createRequest'],
   data: function () {
     return {
       sendConfirm: false,
       requestConfirm: false,
       currencies: ['BTC', 'ETH'],
-      selectedCurrency: '',
+      selectedCurrency: 'ETH',
       recipient: '',
       amount: '',
       description: '',

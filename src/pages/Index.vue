@@ -3,8 +3,8 @@
     <q-page-sticky position="top-right" :offset="[18, 18]">
       <Notifications />
     </q-page-sticky>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <Transaction :walletAddress="walletAddress" :createRequest="createRequest" />
+    <q-page-sticky position="bottom-right" :offset="[18, 18]" :disabled="!this.walletAddress">
+      <Transaction :walletAddress="walletAddress" :createRequest="createRequest" v-on:click.self.prevent="!this.walletAddress"/>
     </q-page-sticky>
   </q-page>
 </template>
@@ -47,13 +47,12 @@ export default {
     )
     const web3 = new Web3(portis.provider)
 
-    fetch('http://localhost:3000/getTransactionsByTopic?topic=all').then(console.log)
-
     web3.eth.getAccounts((error, accounts) => {
       if (error) {
         console.log('Error: Cant get account')
       } else {
         this.walletAddress = accounts[0]
+        fetch('https://payo.ga/api/getTransactionsByTopic?topic=all').then(console.log)
       }
     })
 
@@ -69,7 +68,7 @@ export default {
     // web3.currentProvider.isPortis //returns boolean if user is logged into Portis
   },
   methods: {
-    createRequest (payeeKey, payerKey, currency, amount) {
+    createRequest (payeeKey, payerKey, currency, amount, description) {
       const paymentAddress = '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
       const payeePrivateKey = '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
       // Payee Identity and Signature parameters
@@ -116,9 +115,7 @@ export default {
       // Some arbitrary content to link to the request (you can use request-data-format here)
 
       const contentData = {
-        it: 'is',
-        some: 'content',
-        true: true
+        description: description
       }
 
       // Automatically the requestId, the payee identity value and the payer identity value are added to the topics
@@ -136,6 +133,7 @@ export default {
       const signatureProvider = new EthereumPrivateKeySignatureProvider(
         payeeSignatureParameters
       )
+      signatureProvider.addSignatureParameters({ method: Types.Signature.METHOD.ECDSA, privateKey: '0xf2f48ee19680706196e2e339e5da3491186e0c4c5030670656b0e0164837257d' })
 
       // Create the requestNetwork object
 
@@ -145,7 +143,10 @@ export default {
       // })
 
       const requestNetwork = new RequestNetwork({
-        useMockStorage: true,
+        // useMockStorage: true,
+        nodeConnectionConfig: {
+          baseURL: 'https://payo.ga/api'
+        },
         signatureProvider
       })
 
