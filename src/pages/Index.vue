@@ -52,7 +52,9 @@ export default {
         console.log('Error: Cant get account')
       } else {
         this.walletAddress = accounts[0]
-        fetch('https://payo.ga/api/getTransactionsByTopic?topic=all').then(console.log)
+        fetch('https://payo.ga/api/getTransactionsByTopic?topic=public').then(function (response) {
+          return response
+        })
       }
     })
 
@@ -70,7 +72,7 @@ export default {
   methods: {
     createRequest (payeeKey, payerKey, currency, amount, description) {
       const paymentAddress = '2NBvyZCCX7FaMD4cJMW1hm1XAbzQEfUDxDn'
-      const payeePrivateKey = '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc'
+      const payeePrivateKey = '0xf2f48ee19680706196e2e339e5da3491186e0c4c5030670656b0e0164837257d'
       // Payee Identity and Signature parameters
 
       const payeeIdentity = {
@@ -94,7 +96,7 @@ export default {
 
       const requestCreationHash = {
         currency: Types.RequestLogic.CURRENCY[currency],
-        expectedAmount: amount,
+        expectedAmount: amount * 100000000,
 
         // payee is not mandatory if payer given
         payee: payeeIdentity,
@@ -125,7 +127,8 @@ export default {
       const topics = [
         payeeKey,
         payerKey,
-        paymentAddress
+        paymentAddress,
+        'public'
       ]
 
       // Signature provider will take care of signing everything
@@ -133,7 +136,7 @@ export default {
       const signatureProvider = new EthereumPrivateKeySignatureProvider(
         payeeSignatureParameters
       )
-      signatureProvider.addSignatureParameters({ method: Types.Signature.METHOD.ECDSA, privateKey: '0xf2f48ee19680706196e2e339e5da3491186e0c4c5030670656b0e0164837257d' })
+      signatureProvider.addSignatureParameters({ method: Types.Signature.METHOD.ECDSA, privateKey: '0x18ae62fa934cc62ec5e48df038b3dcaa9b927227caaa6f7d05108c7f1373febc' })
 
       // Create the requestNetwork object
 
